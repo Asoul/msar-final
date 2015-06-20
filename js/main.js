@@ -24,6 +24,7 @@ var rafID = null;
 var analyserContext = null;
 var canvasWidth, canvasHeight;
 var recIndex = 0;
+var qq = null; // asoul add
 
 /* TODO:
 
@@ -31,13 +32,17 @@ var recIndex = 0;
 - "Monitor input" switch
 */
 
-function saveAudio() {
-    audioRecorder.exportWAV( doneEncoding );
-    // could get mono instead by saying
-    // audioRecorder.exportMonoWAV( doneEncoding );
-}
+
+// asoul commented
+// function saveAudio() {
+//     console.log("yo saveAudio()");
+//     audioRecorder.exportWAV( doneEncoding );
+//     // could get mono instead by saying
+//     // audioRecorder.exportMonoWAV( doneEncoding );
+// }
 
 function gotBuffers( buffers ) {
+    console.log("yo gotBuffers(buffers)");
     var canvas = document.getElementById( "wavedisplay" );
 
     drawBuffer( canvas.width, canvas.height, canvas.getContext('2d'), buffers[0] );
@@ -48,11 +53,13 @@ function gotBuffers( buffers ) {
 }
 
 function doneEncoding( blob ) {
+    console.log("yo doneEncoding(blob)");
     Recorder.setupDownload( blob, "myRecording" + ((recIndex<10)?"0":"") + recIndex + ".wav" );
     recIndex++;
 }
 
 function toggleRecording( e ) {
+    console.log("yo toggleRecording(e)()");
     if (e.classList.contains("recording")) {
         // stop recording
         audioRecorder.stop();
@@ -68,15 +75,17 @@ function toggleRecording( e ) {
     }
 }
 
-function convertToMono( input ) {
-    var splitter = audioContext.createChannelSplitter(2);
-    var merger = audioContext.createChannelMerger(2);
+// asoul commented
+// function convertToMono( input ) {
+//     console.log("yo convertToMono(input)");
+//     var splitter = audioContext.createChannelSplitter(2);
+//     var merger = audioContext.createChannelMerger(2);
 
-    input.connect( splitter );
-    splitter.connect( merger, 0, 0 );
-    splitter.connect( merger, 0, 1 );
-    return merger;
-}
+//     input.connect( splitter );
+//     splitter.connect( merger, 0, 0 );
+//     splitter.connect( merger, 0, 1 );
+//     return merger;
+// }
 
 function cancelAnalyserUpdates() {
     window.cancelAnimationFrame( rafID );
@@ -93,17 +102,18 @@ function updateAnalysers(time) {
 
     // analyzer draw code here
     {
-        var SPACING = 3;
+        var SPACING = 3;// the spacing between bar
         var BAR_WIDTH = 1;
         var numBars = Math.round(canvasWidth / SPACING);
         var freqByteData = new Uint8Array(analyserNode.frequencyBinCount);
 
-        analyserNode.getByteFrequencyData(freqByteData); 
+        analyserNode.getByteFrequencyData(freqByteData);
+        qq = freqByteData;// freqByteData is the 1024 data point from FFT
 
-        analyserContext.clearRect(0, 0, canvasWidth, canvasHeight);
-        analyserContext.fillStyle = '#F6D565';
-        analyserContext.lineCap = 'round';
-        var multiplier = analyserNode.frequencyBinCount / numBars;
+        analyserContext.clearRect(0, 0, canvasWidth, canvasHeight);// clear the screen
+        // analyserContext.fillStyle = '#F6D565'; // asoul commented
+        // analyserContext.lineCap = 'round'; // asoul commented
+        var multiplier = analyserNode.frequencyBinCount / numBars;// how many data point sum to one bar
 
         // Draw rectangle for each frequency bin.
         for (var i = 0; i < numBars; ++i) {
@@ -112,8 +122,8 @@ function updateAnalysers(time) {
             // gotta sum/average the block, or we miss narrow-bandwidth spikes
             for (var j = 0; j< multiplier; j++)
                 magnitude += freqByteData[offset + j];
-            magnitude = magnitude / multiplier;
-            var magnitude2 = freqByteData[i * multiplier];
+            magnitude = magnitude / multiplier;// average
+            // var magnitude2 = freqByteData[i * multiplier]; // asoul commented
             analyserContext.fillStyle = "hsl( " + Math.round((i*360)/numBars) + ", 100%, 50%)";
             analyserContext.fillRect(i * SPACING, canvasHeight, BAR_WIDTH, -magnitude);
         }
@@ -122,20 +132,22 @@ function updateAnalysers(time) {
     rafID = window.requestAnimationFrame( updateAnalysers );
 }
 
-function toggleMono() {
-    if (audioInput != realAudioInput) {
-        audioInput.disconnect();
-        realAudioInput.disconnect();
-        audioInput = realAudioInput;
-    } else {
-        realAudioInput.disconnect();
-        audioInput = convertToMono( realAudioInput );
-    }
+// asoul comment
+// function toggleMono() {
+//     if (audioInput != realAudioInput) {
+//         audioInput.disconnect();
+//         realAudioInput.disconnect();
+//         audioInput = realAudioInput;
+//     } else {
+//         realAudioInput.disconnect();
+//         audioInput = convertToMono( realAudioInput );
+//     }
 
-    audioInput.connect(inputPoint);
-}
+//     audioInput.connect(inputPoint);
+// }
 
 function gotStream(stream) {
+    console.log("yo gotStream(stream)");
     inputPoint = audioContext.createGain();
 
     // Create an AudioNode from the stream.
@@ -159,6 +171,7 @@ function gotStream(stream) {
 }
 
 function initAudio() {
+    console.log("yo initAudio()");
         if (!navigator.getUserMedia)
             navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
         if (!navigator.cancelAnimationFrame)
