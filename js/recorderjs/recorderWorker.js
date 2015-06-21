@@ -30,6 +30,9 @@ this.onmessage = function(e){
     case 'record':
       record(e.data.buffer);
       break;
+    case 'array2WAV':
+      array2WAV(e.data.type, e.data.array);
+      break;
     case 'exportWAV':
       exportWAV(e.data.type);
       break;
@@ -41,6 +44,14 @@ this.onmessage = function(e){
       break;
   }
 };
+
+function array2WAV(type, array) {
+  var interleaved = interleave(array, array);
+  var dataview = encodeWAV(interleaved);
+  var audioBlob = new Blob([dataview], { type: type });
+  
+  this.postMessage(audioBlob);
+}
 
 function init(config){
   sampleRate = config.sampleRate;

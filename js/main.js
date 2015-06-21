@@ -31,6 +31,7 @@ function gotBuffers( buffers ) {
     var canvas = document.getElementById( "wavedisplay" );
 
     drawBuffer( canvas.width, canvas.height, canvas.getContext('2d'), buffers[0] );
+    qq = buffers;
     // buffers[0] is left channel sound
     // buffers[1] is right channel sound
 
@@ -82,6 +83,11 @@ function togglePlaying( e ) {
         document.getElementById( "play" ).src = "img/pause.svg"
         audio.play();
     }
+}
+
+function toggleSaying( e ) {
+    audioRecorder.array2WAV( doneEncoding );
+    // audioRecorder.array2WAV( gotBuffers );
 }
 
 function cancelAnalyserUpdates() {
