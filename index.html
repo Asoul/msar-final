@@ -43,9 +43,6 @@
 	#play {
 		height: 10vh;
 	}
-	#play.playing {
-		opacity: 0.5;
-	}
 	#save, #save img { height: 10vh; }
 	#save { opacity: 0.25;}
 	#save[download] { opacity: 1;}
@@ -72,7 +69,7 @@
 	</div>
 	<div id="controls">
 		<img id="record" src="img/mic128.png" onclick="toggleRecording(this);" class="">
-		<img id="play" src="img/play.png" onclick="togglePlaying(this);" class="">
+		<img id="play" src="img/play.svg" onclick="togglePlaying(this);" class="">
 		<a id="save" href="" download=""><img src="img/save.svg"></a>
 	</div>
 	<audio id="audio" src=""></audio>

@@ -73,11 +73,13 @@ function togglePlaying( e ) {
         // stop playing    
         audio.pause();
         e.classList.remove("playing");
+        document.getElementById( "play" ).src = "img/play.svg"
     } else {
         // start playing
         e.classList.add("playing");
         var blob = document.getElementById( "save" );
         audio.src = blob.href;
+        document.getElementById( "play" ).src = "img/pause.svg"
         audio.play();
     }
 }
