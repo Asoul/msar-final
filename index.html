@@ -33,12 +33,18 @@
 		height: 20%;
 		width: 100%;
 	}
-	#record { height: 15vh; }
+	#record { height: 14vh; }
 	#record.recording { 
 		background: red;
 		background: -webkit-radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
 		background: -moz-radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
 		background: radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
+	}
+	#play {
+		height: 10vh;
+	}
+	#play.playing {
+		opacity: 0.5;
 	}
 	#save, #save img { height: 10vh; }
 	#save { opacity: 0.25;}
@@ -66,6 +72,7 @@
 	</div>
 	<div id="controls">
 		<img id="record" src="img/mic128.png" onclick="toggleRecording(this);" class="">
+		<img id="play" src="img/play.png" onclick="togglePlaying(this);" class="">
 		<a id="save" href="blob:http%3A//webaudiodemos.appspot.com/17f52eac-192a-4ff8-a3a4-1206bd5485a2" download="myRecording00.wav"><img src="img/save.svg"></a>
 	</div>
 

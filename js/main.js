@@ -26,13 +26,6 @@ var canvasWidth, canvasHeight;
 var recIndex = 0;
 var qq = null; // asoul add
 
-/* TODO:
-
-- offer mono option
-- "Monitor input" switch
-*/
-
-
 // asoul commented
 // function saveAudio() {
 //     console.log("yo saveAudio()");
@@ -46,6 +39,8 @@ function gotBuffers( buffers ) {
     var canvas = document.getElementById( "wavedisplay" );
 
     drawBuffer( canvas.width, canvas.height, canvas.getContext('2d'), buffers[0] );
+    // buffers[0] is left channel sound
+    // buffers[1] is right channel sound
 
     // the ONLY time gotBuffers is called is right after a new recording is completed - 
     // so here's where we should set up the download.
@@ -72,6 +67,19 @@ function toggleRecording( e ) {
         e.classList.add("recording");
         audioRecorder.clear();
         audioRecorder.record();
+    }
+}
+
+function togglePlaying( e ) {
+    console.log("yo togglePlaying(e)");
+    if (e.classList.contains("playing")) {
+        // stop playing
+        // audioRecorder.play();
+        e.classList.remove("playing");
+    } else {
+        // start playing
+        // audioRecorder.stopPlaying();
+        e.classList.add("playing");
     }
 }
 
@@ -108,8 +116,6 @@ function updateAnalysers(time) {
         var freqByteData = new Uint8Array(analyserNode.frequencyBinCount);
 
         analyserNode.getByteFrequencyData(freqByteData);
-        qq = freqByteData;// freqByteData is the 1024 data point from FFT
-
         analyserContext.clearRect(0, 0, canvasWidth, canvasHeight);// clear the screen
         // analyserContext.fillStyle = '#F6D565'; // asoul commented
         // analyserContext.lineCap = 'round'; // asoul commented
@@ -172,12 +178,12 @@ function gotStream(stream) {
 
 function initAudio() {
     console.log("yo initAudio()");
-        if (!navigator.getUserMedia)
-            navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-        if (!navigator.cancelAnimationFrame)
-            navigator.cancelAnimationFrame = navigator.webkitCancelAnimationFrame || navigator.mozCancelAnimationFrame;
-        if (!navigator.requestAnimationFrame)
-            navigator.requestAnimationFrame = navigator.webkitRequestAnimationFrame || navigator.mozRequestAnimationFrame;
+    if (!navigator.getUserMedia)
+        navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    if (!navigator.cancelAnimationFrame)
+        navigator.cancelAnimationFrame = navigator.webkitCancelAnimationFrame || navigator.mozCancelAnimationFrame;
+    if (!navigator.requestAnimationFrame)
+        navigator.requestAnimationFrame = navigator.webkitRequestAnimationFrame || navigator.mozRequestAnimationFrame;
 
     navigator.getUserMedia(
         {
