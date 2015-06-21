@@ -26,14 +26,6 @@ var canvasWidth, canvasHeight;
 var recIndex = 0;
 var qq = null; // asoul add
 
-// asoul commented
-// function saveAudio() {
-//     console.log("yo saveAudio()");
-//     audioRecorder.exportWAV( doneEncoding );
-//     // could get mono instead by saying
-//     // audioRecorder.exportMonoWAV( doneEncoding );
-// }
-
 function gotBuffers( buffers ) {
     console.log("yo gotBuffers(buffers)");
     var canvas = document.getElementById( "wavedisplay" );
@@ -70,38 +62,22 @@ function toggleRecording( e ) {
     }
 }
 
-function playSound() {
-    var blob = document.getElementById( "save" );
-    var audio = document.getElementById( "audio" );
-    audio.src = blob.href;
-    audio.play();
-}
-
 function togglePlaying( e ) {
     console.log("yo togglePlaying(e)");
     if (e.classList.contains("playing")) {
         // stop playing
-        // audioRecorder.play();
+        var audio = document.getElementById( "audio" );
+        audio.pause();
         e.classList.remove("playing");
     } else {
         // start playing
-        // audioRecorder.stopPlaying();
         e.classList.add("playing");
-        playSound();
+        var blob = document.getElementById( "save" );
+        var audio = document.getElementById( "audio" );
+        audio.src = blob.href;
+        audio.play();
     }
 }
-
-// asoul commented
-// function convertToMono( input ) {
-//     console.log("yo convertToMono(input)");
-//     var splitter = audioContext.createChannelSplitter(2);
-//     var merger = audioContext.createChannelMerger(2);
-
-//     input.connect( splitter );
-//     splitter.connect( merger, 0, 0 );
-//     splitter.connect( merger, 0, 1 );
-//     return merger;
-// }
 
 function cancelAnalyserUpdates() {
     window.cancelAnimationFrame( rafID );
@@ -125,8 +101,7 @@ function updateAnalysers(time) {
 
         analyserNode.getByteFrequencyData(freqByteData);
         analyserContext.clearRect(0, 0, canvasWidth, canvasHeight);// clear the screen
-        // analyserContext.fillStyle = '#F6D565'; // asoul commented
-        // analyserContext.lineCap = 'round'; // asoul commented
+
         var multiplier = analyserNode.frequencyBinCount / numBars;// how many data point sum to one bar
 
         // Draw rectangle for each frequency bin.
@@ -146,20 +121,6 @@ function updateAnalysers(time) {
     rafID = window.requestAnimationFrame( updateAnalysers );
 }
 
-// asoul comment
-// function toggleMono() {
-//     if (audioInput != realAudioInput) {
-//         audioInput.disconnect();
-//         realAudioInput.disconnect();
-//         audioInput = realAudioInput;
-//     } else {
-//         realAudioInput.disconnect();
-//         audioInput = convertToMono( realAudioInput );
-//     }
-
-//     audioInput.connect(inputPoint);
-// }
-
 function gotStream(stream) {
     console.log("yo gotStream(stream)");
     inputPoint = audioContext.createGain();
@@ -168,8 +129,6 @@ function gotStream(stream) {
     realAudioInput = audioContext.createMediaStreamSource(stream);
     audioInput = realAudioInput;
     audioInput.connect(inputPoint);
-
-//    audioInput = convertToMono( input );
 
     analyserNode = audioContext.createAnalyser();
     analyserNode.fftSize = 2048;
