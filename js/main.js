@@ -63,17 +63,20 @@ function toggleRecording( e ) {
 }
 
 function togglePlaying( e ) {
-    console.log("yo togglePlaying(e)");
+
+    var audio = document.getElementById( "audio" );
+    audio.onended = function() {
+        togglePlaying( e );
+    }
+
     if (e.classList.contains("playing")) {
-        // stop playing
-        var audio = document.getElementById( "audio" );
+        // stop playing    
         audio.pause();
         e.classList.remove("playing");
     } else {
         // start playing
         e.classList.add("playing");
         var blob = document.getElementById( "save" );
-        var audio = document.getElementById( "audio" );
         audio.src = blob.href;
         audio.play();
     }
