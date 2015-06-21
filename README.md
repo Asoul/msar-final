@@ -7,4 +7,3 @@
 ## Reference
 
 1. [AudioRecorder](http://webaudiodemos.appspot.com/AudioRecorder/index.html)
-2. 

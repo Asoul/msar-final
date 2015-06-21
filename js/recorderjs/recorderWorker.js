@@ -33,9 +33,9 @@ this.onmessage = function(e){
     case 'exportWAV':
       exportWAV(e.data.type);
       break;
-    case 'exportMonoWAV':
-      exportMonoWAV(e.data.type);
-      break;
+    // case 'exportMonoWAV':
+    //   exportMonoWAV(e.data.type);
+    //   break;
     case 'getBuffers':
       getBuffers();
       break;
@@ -61,7 +61,9 @@ function exportWAV(type){
   var interleaved = interleave(bufferL, bufferR);
   var dataview = encodeWAV(interleaved);
   var audioBlob = new Blob([dataview], { type: type });
-
+  console.log("yo");
+  console.log(recBuffersL);
+  console.log(recBuffersR);
   this.postMessage(audioBlob);
 }
 

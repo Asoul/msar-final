@@ -70,6 +70,13 @@ function toggleRecording( e ) {
     }
 }
 
+function playSound() {
+    var blob = document.getElementById( "save" );
+    var audio = document.getElementById( "audio" );
+    audio.src = blob.href;
+    audio.play();
+}
+
 function togglePlaying( e ) {
     console.log("yo togglePlaying(e)");
     if (e.classList.contains("playing")) {
@@ -80,6 +87,7 @@ function togglePlaying( e ) {
         // start playing
         // audioRecorder.stopPlaying();
         e.classList.add("playing");
+        playSound();
     }
 }
 
