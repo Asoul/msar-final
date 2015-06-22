@@ -49,7 +49,7 @@ function array2WAV(type, array) {
   var interleaved = interleave(array, array);
   var dataview = encodeWAV(interleaved);
   var audioBlob = new Blob([dataview], { type: type });
-  
+
   this.postMessage(audioBlob);
 }
 
@@ -93,7 +93,16 @@ function mergeBuffers(recBuffers, recLength){
     result.set(recBuffers[i], offset);
     offset += recBuffers[i].length;
   }
-  return result;
+  return echo(result, 3200);
+}
+
+function echo(array, delay) {
+  var len = array.length;
+  if (len < delay) return array;
+  for (var i = delay; i < len; i++) {
+    array[i] = array[i] + 0.8 * array[i-delay];
+  }
+  return array;
 }
 
 function interleave(inputL, inputR){
