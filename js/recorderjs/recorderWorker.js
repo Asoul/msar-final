@@ -67,7 +67,11 @@ function exportWAV(type){
   var bufferL = mergeBuffers(recBuffersL, recLength);
   var bufferR = mergeBuffers(recBuffersR, recLength);
   var interleaved = interleave(bufferL, bufferR);
-  var dataview = encodeWAV(interleaved);
+
+  // add voice filter
+  var voicePart = getVoicePart(interleaved);
+
+  var dataview = encodeWAV(voicePart);
   var audioBlob = new Blob([dataview], { type: type });
   
   this.postMessage(audioBlob);
@@ -93,7 +97,7 @@ function mergeBuffers(recBuffers, recLength){
     result.set(recBuffers[i], offset);
     offset += recBuffers[i].length;
   }
-  return echo(result, 3200);
+  return result;
 }
 
 function echo(array, delay) {
@@ -104,6 +108,56 @@ function echo(array, delay) {
   }
   return array;
 }
+
+Array.prototype.max = function() {
+  return Math.max.apply(null, this);
+};
+
+Array.prototype.min = function() {
+  return Math.min.apply(null, this);
+};
+
+function getVoicePart( input ) {
+  var frameSize = 2048;
+  var frameOverlap = 0;
+  var sampleRate = 44100;
+
+  var frameStep = frameSize - frameOverlap;
+  var len = input.length;
+
+  var squares = [];
+  var volumes = [];
+
+  // 先算出平方的 input
+  for (var i = 0; i < len; i++) squares.push(Math.pow(input[i],2));
+
+  // 算出每個 frame 中的 volume 平方
+  for (var i = 0; i < len; i += frameStep) {
+    var sumSquare = 0;
+    for (var j = i; j < Math.min(i+frameSize, len); j++) {
+      sumSquare = sumSquare + Math.pow(squares[j],2);
+    }
+    volumes.push(sumSquare);
+  }
+
+  var maxVol = volumes.max();
+  var minVol = volumes.min();
+  var volThresholdRate = 0.1;
+  console.log("maxVol = " , maxVol, "minVol = ", minVol);
+  
+  // 提取出需要的片段
+  var output = [];
+  for (var i = 0; i < volumes.length; i++) {
+    if (volumes[i] > (maxVol - minVol) * volThresholdRate + minVol) {
+      for ( var j = i*frameStep; j < Math.min((i+1)*frameStep, len); j++ ) {
+        output.push(input[j]);
+      }
+    }
+  }
+  console.log(input.length ," to ", output.length);
+  return output;
+}
+
 
 function interleave(inputL, inputR){
   var length = inputL.length + inputR.length;
