@@ -188,6 +188,8 @@ function gotStream(stream) {
     inputPoint.connect( zeroGain );
 
     zeroGain.connect(merger, 0, 0);
+
+    // 連結自己加的 osscillator
     var real = new Float32Array([0,0.4,0.4,1,1,1,0.3,0.7,0.6,0.5,0.9,0.8]);
     var imag = new Float32Array(real.length);
     var hornTable = audioContext.createPeriodicWave(real, imag);
