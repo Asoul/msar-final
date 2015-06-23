@@ -75,7 +75,11 @@ DEALINGS IN THE SOFTWARE.
     this.getBuffers = function(cb) {
       console.log("recorder.getBuffers()");
       currCallback = cb || config.callback;
-      worker.postMessage({ command: 'getBuffers' })
+      worker.postMessage({ command: 'getBuffers' });
+    }
+
+    this.savePhones = function() {
+      worker.postMessage({ command: 'savePhones' });
     }
 
     // this.array2WAV = function(cb) {
@@ -126,6 +130,19 @@ DEALINGS IN THE SOFTWARE.
       worker.postMessage({
         command: 'exportWAV',
         type: type
+      });
+    }
+
+    this.playPhone = function(cb, index){
+      console.log("recorder playphone");
+      console.log(index);
+      currCallback = cb || config.callback;
+      index = index || 0;
+      if (!currCallback) throw new Error('Callback not set');
+      worker.postMessage({
+        command: 'playPhone',
+        type: 'audio/wav',
+        idx: index
       });
     }
 

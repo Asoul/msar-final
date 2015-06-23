@@ -20,12 +20,13 @@ var audioInput = null,
     realAudioInput = null,
     inputPoint = null,
     audioRecorder = null;
-var rafID = null;
 var analyserContext = null;
 var recIndex = 0;
 var merger = audioContext.createChannelMerger(2);
 var osc = audioContext.createOscillator();
 var qq = null, qq2 = [null, null]; // asoul add
+var audioHrefs = [];
+var choosedIndex = null;
 
 function drawBuffer( width, height, context, data ) {
     var step = Math.ceil( data.length / width );
@@ -63,13 +64,30 @@ function doneEncoding( blob ) {
     recIndex++;
 }
 
+// function toggleRecording( e ) {
+//     console.log("yo toggleRecording(e)");
+//     if (e.classList.contains("recording")) {
+//         // stop recording
+//         audioRecorder.stop();
+//         e.classList.remove("recording");
+//         audioRecorder.getBuffers( gotBuffers );
+//     } else {
+//         // start recording
+//         if (!audioRecorder)
+//             return;
+//         e.classList.add("recording");
+//         audioRecorder.clear();
+//         audioRecorder.record();
+//     }
+// }
+
 function toggleRecording( e ) {
     console.log("yo toggleRecording(e)");
     if (e.classList.contains("recording")) {
         // stop recording
         audioRecorder.stop();
         e.classList.remove("recording");
-        audioRecorder.getBuffers( gotBuffers );
+        audioRecorder.savePhones();
     } else {
         // start recording
         if (!audioRecorder)
@@ -102,9 +120,11 @@ function togglePlaying( e ) {
     }
 }
 
-function toggleSaying( e ) {
-    audioRecorder.array2WAV( doneEncoding );
+function choosePhone( index ) {
+    // audioRecorder.array2WAV( doneEncoding );
     // audioRecorder.array2WAV( gotBuffers );
+    choosedIndex = index;
+    audioRecorder.playPhone(doneEncoding, index);
 }
 
 function toggleTimbre( e ) {
@@ -122,10 +142,6 @@ function toggleTimbre( e ) {
     }
 }
 
-function cancelAnalyserUpdates() {
-    window.cancelAnimationFrame( rafID );
-    rafID = null;
-}
 
 function gotStream(stream) {
     console.log("yo gotStream(stream)");

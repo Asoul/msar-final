@@ -40,6 +40,9 @@
 		width: 60%;
 		display: inline-block;
 	}
+	td {
+		cursor: pointer;
+	}
 	#record, #play, #say, #save {
 		width: 80%;
 		padding: 10%;
@@ -73,7 +76,7 @@
 		<div id="controls">
 			<img id="record" src="img/mic128.png" onclick="toggleRecording(this);" class="" alt="全部錄音">
 			<img id="play" src="img/play.svg" onclick="togglePlaying(this);" class="" alt="播放">
-			<img id="say" src="img/say.jpg" onclick="" class="" alt="更改單音">
+			<img id="say" src="img/say.jpg" onclick="toggleSaying(this);" class="" alt="更改單音">
 			<a id="save" href="" download=""><img src="img/save.svg"></a>
 			<audio id="audio" src=""></audio>	
 		</div>
@@ -81,59 +84,59 @@
 	<div id="right">
 		<table id="alphabets">
 			<tr>
-				<td>AA</td>
-				<td>AE</td>
-				<td>AH</td>
-				<td>AO</td>
-				<td>AW</td>
+				<td onclick="choosePhone(0)">AA</td>
+				<td onclick="choosePhone(1)">AE</td>
+				<td onclick="choosePhone(2)">AH</td>
+				<td onclick="choosePhone(3)">AO</td>
+				<td onclick="choosePhone(4)">AW</td>
 			</tr>
 			<tr>
-				<td>AY</td>
-				<td>B</td>
-				<td>CH</td>
-				<td>D</td>
-				<td>DH</td>
+				<td onclick="choosePhone(5)">AY</td>
+				<td onclick="choosePhone(6)">B</td>
+				<td onclick="choosePhone(7)">CH</td>
+				<td onclick="choosePhone(8)">D</td>
+				<td onclick="choosePhone(9)">DH</td>
 			</tr>
 			<tr>
-				<td>EH</td>
-				<td>ER</td>
-				<td>EY</td>
-				<td>F</td>
-				<td>G</td>
+				<td onclick="choosePhone(10)">EH</td>
+				<td onclick="choosePhone(11)">ER</td>
+				<td onclick="choosePhone(12)">EY</td>
+				<td onclick="choosePhone(13)">F</td>
+				<td onclick="choosePhone(14)">G</td>
 			</tr>
 			<tr>
-				<td>HH</td>
-				<td>IH</td>
-				<td>IY</td>
-				<td>JH</td>
-				<td>K</td>
+				<td onclick="choosePhone(15)">HH</td>
+				<td onclick="choosePhone(16)">IH</td>
+				<td onclick="choosePhone(17)">IY</td>
+				<td onclick="choosePhone(18)">JH</td>
+				<td onclick="choosePhone(19)">K</td>
 			</tr>
 			<tr>
-				<td>L</td>
-				<td>M</td>
-				<td>N</td>
-				<td>NG</td>
-				<td>OW</td>
+				<td onclick="choosePhone(20)">L</td>
+				<td onclick="choosePhone(21)">M</td>
+				<td onclick="choosePhone(22)">N</td>
+				<td onclick="choosePhone(23)">NG</td>
+				<td onclick="choosePhone(24)">OW</td>
 			</tr>
 			<tr>
-				<td>OY</td>
-				<td>P</td>
-				<td>R</td>
-				<td>S</td>
-				<td>SH</td>
+				<td onclick="choosePhone(25)">OY</td>
+				<td onclick="choosePhone(26)">P</td>
+				<td onclick="choosePhone(27)">R</td>
+				<td onclick="choosePhone(28)">S</td>
+				<td onclick="choosePhone(29)">SH</td>
 			</tr>
 			<tr>
-				<td>T</td>
-				<td>TH</td>
-				<td>UH</td>
-				<td>UW</td>
-				<td>V</td>
+				<td onclick="choosePhone(30)">T</td>
+				<td onclick="choosePhone(31)">TH</td>
+				<td onclick="choosePhone(32)">UH</td>
+				<td onclick="choosePhone(33)">UW</td>
+				<td onclick="choosePhone(34)">V</td>
 			</tr>
 			<tr>
-				<td>W</td>
-				<td>Y</td>
-				<td>Z</td>
-				<td>ZH</td>
+				<td onclick="choosePhone(35)">W</td>
+				<td onclick="choosePhone(36)">Y</td>
+				<td onclick="choosePhone(37)">Z</td>
+				<td onclick="choosePhone(38)">ZH</td>
 			</tr>
 		</table>
 	</div>

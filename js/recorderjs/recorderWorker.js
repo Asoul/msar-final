@@ -22,6 +22,51 @@ var recLength = 0,
   recBuffersR = [],
   sampleRate;
 
+var phones = [];
+
+var PHONE_TABLE = [
+  "AA",
+  "AE",
+  "AH",
+  "AO",
+  "AW",
+  "AY",
+  "B",
+  "CH",
+  "D",
+  "DH",
+  "EH",
+  "ER",
+  "EY",
+  "F",
+  "G",
+  "HH",
+  "IH",
+  "IY",
+  "JH",
+  "K",
+  "L",
+  "M",
+  "N",
+  "NG",
+  "OW",
+  "OY",
+  "P",
+  "R",
+  "S",
+  "SH",
+  "T",
+  "TH",
+  "UH",
+  "UW",
+  "V",
+  "W",
+  "Y",
+  "Z",
+  "ZH",
+  "."
+];
+
 this.onmessage = function(e){
   switch(e.data.command){
     case 'init':
@@ -36,8 +81,14 @@ this.onmessage = function(e){
     case 'exportWAV':
       exportWAV(e.data.type);
       break;
+    case 'playPhone':
+      playPhone(e.data.type, e.data.idx);
+      break;
     case 'getBuffers':
       getBuffers();
+      break;
+    case 'savePhones':
+      savePhones();
       break;
     case 'clear':
       clear();
@@ -68,10 +119,72 @@ function exportWAV(type){
   var bufferR = mergeBuffers(recBuffersR, recLength);
   var interleaved = interleave(bufferL, bufferR);
 
-  // add voice filter
   var voicePart = getVoicePart(interleaved);
 
   var dataview = encodeWAV(voicePart);
+  var audioBlob = new Blob([dataview], { type: type });
+  
+  this.postMessage(audioBlob);
+}
+
+function savePhones() {
+
+  var bufferL = mergeBuffers(recBuffersL, recLength);
+  var bufferR = mergeBuffers(recBuffersR, recLength);
+  var input = interleave(bufferL, bufferR);
+
+  var frameSize = 1024;
+  var frameOverlap = 512;
+  var sampleRate = 44100;
+
+  var frameStep = frameSize - frameOverlap;
+  var len = input.length;
+
+  var squares = [];
+  var volumes = [];
+
+  // 先算出平方的 input
+  for (var i = 0; i < len; i++) squares.push(Math.pow(input[i],2));
+
+  // 算出每個 frame 中的 volume 平方
+  for (var i = 0; i < len; i += frameStep) {
+    var sumSquare = 0;
+    for (var j = i; j < Math.min(i+frameSize, len); j++) {
+      sumSquare = sumSquare + Math.pow(squares[j],2);
+    }
+    volumes.push(sumSquare);
+  }
+
+  var maxVol = volumes.max();
+  var minVol = volumes.min();
+  var volThresholdRate = 0.1;
+
+  console.log("maxVol = " , maxVol, ",minVol = ", minVol);
+  
+  // 提取出需要的片段
+  phones = [];// clean old records
+  var output = [];
+  for (var i = 0; i < volumes.length; i++) {
+    if (volumes[i] > (maxVol - minVol) * volThresholdRate + minVol) {
+      for ( var j = i*frameStep; j < Math.min((i+1)*frameStep, len); j++ ) {
+        output.push(input[j]);
+      }
+    } else {
+      if (output.length > 0) {
+        phones.push(output);
+        output = [];  
+      }
+    }
+  }
+  console.log("phones count = ", phones.length);
+}
+
+function playPhone(type, index) {
+  console.log("worker playphone");
+  if (index < 0 || index > 40 || index > phones.length) return;
+  console.log(type);
+  console.log(index);
+  var dataview = encodeWAV(phones[index]);
   var audioBlob = new Blob([dataview], { type: type });
   
   this.postMessage(audioBlob);
@@ -118,8 +231,8 @@ Array.prototype.min = function() {
 };
 
 function getVoicePart( input ) {
-  var frameSize = 2048;
-  var frameOverlap = 0;
+  var frameSize = 1024;
+  var frameOverlap = 512;
   var sampleRate = 44100;
 
   var frameStep = frameSize - frameOverlap;
@@ -155,7 +268,7 @@ function getVoicePart( input ) {
     }
   }
   console.log(input.length ," to ", output.length);
-  return hammingWindow(output);
+  return output;
 }
 
 function hammingWindow(input) {
