@@ -22,7 +22,6 @@ var audioInput = null,
     audioRecorder = null;
 var rafID = null;
 var analyserContext = null;
-var canvasWidth, canvasHeight;
 var recIndex = 0;
 var merger = audioContext.createChannelMerger(2);
 var osc = audioContext.createOscillator();
@@ -49,9 +48,6 @@ function drawBuffer( width, height, context, data ) {
 
 function gotBuffers( buffers ) {
     console.log("yo gotBuffers(buffers)");
-    var canvas = document.getElementById( "wavedisplay" );
-
-    drawBuffer( canvas.width, canvas.height, canvas.getContext('2d'), buffers[0] );
     qq = buffers;
     // buffers[0] is left channel sound
     // buffers[1] is right channel sound
@@ -131,51 +127,6 @@ function cancelAnalyserUpdates() {
     rafID = null;
 }
 
-function updateAnalysers(time) {
-    if (!analyserContext) {
-        var canvas = document.getElementById("analyser");
-        canvasWidth = canvas.width;
-        canvasHeight = canvas.height;
-        analyserContext = canvas.getContext('2d');
-    }
-
-    // analyzer draw code here
-    {
-        var SPACING = 3;// the spacing between bar
-        var BAR_WIDTH = 1;
-        var numBars = Math.round(canvasWidth / SPACING);
-        var freqByteData = new Uint8Array(analyserNode.frequencyBinCount);
-
-
-        var freqFloatData = new Float32Array(analyserNode.frequencyBinCount);
-
-        analyserNode.getByteFrequencyData(freqByteData);
-        analyserNode.getFloatFrequencyData(freqFloatData);
-
-        qq2[0] = freqByteData;
-        qq2[1] = freqFloatData;
-
-        analyserContext.clearRect(0, 0, canvasWidth, canvasHeight);// clear the screen
-
-        var multiplier = analyserNode.frequencyBinCount / numBars;// how many data point sum to one bar
-
-        // Draw rectangle for each frequency bin.
-        for (var i = 0; i < numBars; ++i) {
-            var magnitude = 0;
-            var offset = Math.floor( i * multiplier );
-            // gotta sum/average the block, or we miss narrow-bandwidth spikes
-            for (var j = 0; j< multiplier; j++)
-                magnitude += freqByteData[offset + j];
-            magnitude = magnitude / multiplier;// average
-            // var magnitude2 = freqByteData[i * multiplier]; // asoul commented
-            analyserContext.fillStyle = "hsl( " + Math.round((i*360)/numBars) + ", 100%, 50%)";
-            analyserContext.fillRect(i * SPACING, canvasHeight, BAR_WIDTH, -magnitude);
-        }
-    }
-    
-    rafID = window.requestAnimationFrame( updateAnalysers );
-}
-
 function gotStream(stream) {
     console.log("yo gotStream(stream)");
     inputPoint = audioContext.createGain();
@@ -207,7 +158,6 @@ function gotStream(stream) {
     osc.start();
     
     merger.connect( audioContext.destination );
-    updateAnalysers();
 }
 
 function initAudio() {

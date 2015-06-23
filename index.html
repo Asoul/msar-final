@@ -3,9 +3,8 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>Say it!</title>
 	
-	<!--<script src="js/fft.js"></script>
 	<script src="js/recorderjs/recorder.js"></script>
-	<script src="js/main.js"></script>-->
+	<script src="js/main.js"></script>
 	
 	<style>
 	body { 
@@ -41,7 +40,7 @@
 		width: 60%;
 		display: inline-block;
 	}
-	#record, #play, #say {
+	#record, #play, #say, #save {
 		width: 80%;
 		padding: 10%;
 	}
@@ -75,6 +74,7 @@
 			<img id="record" src="img/mic128.png" onclick="toggleRecording(this);" class="" alt="全部錄音">
 			<img id="play" src="img/play.svg" onclick="togglePlaying(this);" class="" alt="播放">
 			<img id="say" src="img/say.jpg" onclick="" class="" alt="更改單音">
+			<a id="save" href="" download=""><img src="img/save.svg"></a>
 			<audio id="audio" src=""></audio>	
 		</div>
 	</div>
