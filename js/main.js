@@ -128,6 +128,8 @@ function choosePhone( index ) {
 }
 
 function chooseText() {
+    var text = document.getElementById('source').value;
+    // var theArray = YOUR_FUNCTION(text)
     var theArray = ['AA', 'AE', '.', 'AH', 'AO', '.', 'AH', 'AO'];
     audioRecorder.sayText(doneEncoding, theArray);
 }
