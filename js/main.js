@@ -26,7 +26,7 @@ var canvasWidth, canvasHeight;
 var recIndex = 0;
 var merger = audioContext.createChannelMerger(2);
 var osc = audioContext.createOscillator();
-var qq = null; // asoul add
+var qq = null, qq2 = [null, null]; // asoul add
 
 function drawBuffer( width, height, context, data ) {
     var step = Math.ceil( data.length / width );
@@ -68,7 +68,7 @@ function doneEncoding( blob ) {
 }
 
 function toggleRecording( e ) {
-    console.log("yo toggleRecording(e)()");
+    console.log("yo toggleRecording(e)");
     if (e.classList.contains("recording")) {
         // stop recording
         audioRecorder.stop();
@@ -146,7 +146,15 @@ function updateAnalysers(time) {
         var numBars = Math.round(canvasWidth / SPACING);
         var freqByteData = new Uint8Array(analyserNode.frequencyBinCount);
 
+
+        var freqFloatData = new Float32Array(analyserNode.frequencyBinCount);
+
         analyserNode.getByteFrequencyData(freqByteData);
+        analyserNode.getFloatFrequencyData(freqFloatData);
+
+        qq2[0] = freqByteData;
+        qq2[1] = freqFloatData;
+
         analyserContext.clearRect(0, 0, canvasWidth, canvasHeight);// clear the screen
 
         var multiplier = analyserNode.frequencyBinCount / numBars;// how many data point sum to one bar
@@ -195,7 +203,7 @@ function gotStream(stream) {
     var hornTable = audioContext.createPeriodicWave(real, imag);
 
     osc.setPeriodicWave(hornTable);
-    osc.frequency.value = 160;
+    osc.frequency.value = 80;
     osc.start();
     
     merger.connect( audioContext.destination );

@@ -8,6 +8,10 @@
 
 1. [AudioRecorder](http://webaudiodemos.appspot.com/AudioRecorder/index.html)
 2. [Web API Interface](https://developer.mozilla.org/en-US/docs/Web/API)
+3. [fftjs](https://github.com/amonks/fftjs)
+4. [timbre.js](http://mohayonao.github.io/timbre.js/)
+5. [fft.js](https://github.com/jensnockert/fft.js)
+6. [jsfft](https://github.com/dntj/jsfft)
 
 ## Flow
 

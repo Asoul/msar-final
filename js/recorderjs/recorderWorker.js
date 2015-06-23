@@ -143,7 +143,7 @@ function getVoicePart( input ) {
   var maxVol = volumes.max();
   var minVol = volumes.min();
   var volThresholdRate = 0.1;
-  console.log("maxVol = " , maxVol, "minVol = ", minVol);
+  console.log("maxVol = " , maxVol, ",minVol = ", minVol);
   
   // 提取出需要的片段
   var output = [];
