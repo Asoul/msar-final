@@ -146,6 +146,17 @@ DEALINGS IN THE SOFTWARE.
       });
     }
 
+    this.sayText = function(cb, array) {
+      console.log("recorder sayText");
+      currCallback = cb || config.callback;
+      if (!currCallback) throw new Error('Callback not set');
+      worker.postMessage({
+        command: 'concatPhones',
+        type: 'audio/wav',
+        series: array
+      });
+    }
+
     worker.onmessage = function(e){
       var blob = e.data;
       currCallback(blob);

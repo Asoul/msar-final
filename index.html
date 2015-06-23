@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=Big5">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>Say it!</title>
 	
@@ -43,7 +43,7 @@
 	td {
 		cursor: pointer;
 	}
-	#record, #play, #say, #save {
+	#record, #play, #say, #sayText, #save {
 		width: 80%;
 		padding: 10%;
 	}
@@ -76,7 +76,8 @@
 		<div id="controls">
 			<img id="record" src="img/mic128.png" onclick="toggleRecording(this);" class="" alt="全部錄音">
 			<img id="play" src="img/play.svg" onclick="togglePlaying(this);" class="" alt="播放">
-			<img id="say" src="img/say.jpg" onclick="toggleSaying(this);" class="" alt="更改單音">
+			<img id="say" src="img/say.jpg" onclick="toggleSaying(this);" class="" alt="選擇單音">
+			<img id="sayText" src="img/timbre.gif" onclick="chooseText();" class="" alt="選擇整段">
 			<a id="save" href="" download=""><img src="img/save.svg"></a>
 			<audio id="audio" src=""></audio>	
 		</div>

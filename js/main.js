@@ -127,6 +127,11 @@ function choosePhone( index ) {
     audioRecorder.playPhone(doneEncoding, index);
 }
 
+function chooseText() {
+    var theArray = ['AA', 'AE', '.', 'AH', 'AO', '.', 'AH', 'AO'];
+    audioRecorder.sayText(doneEncoding, theArray);
+}
+
 function toggleTimbre( e ) {
     console.log("toggle timbre");
 

@@ -24,48 +24,50 @@ var recLength = 0,
 
 var phones = [];
 
-var PHONE_TABLE = [
-  "AA",
-  "AE",
-  "AH",
-  "AO",
-  "AW",
-  "AY",
-  "B",
-  "CH",
-  "D",
-  "DH",
-  "EH",
-  "ER",
-  "EY",
-  "F",
-  "G",
-  "HH",
-  "IH",
-  "IY",
-  "JH",
-  "K",
-  "L",
-  "M",
-  "N",
-  "NG",
-  "OW",
-  "OY",
-  "P",
-  "R",
-  "S",
-  "SH",
-  "T",
-  "TH",
-  "UH",
-  "UW",
-  "V",
-  "W",
-  "Y",
-  "Z",
-  "ZH",
-  "."
-];
+var BLANK = Array(4096).join("0").split('');
+
+var PHONE_DICT = {
+  "AA": 0,
+  "AE": 1,
+  "AH": 2,
+  "AO": 3,
+  "AW": 4,
+  "AY": 5,
+  "B": 6,
+  "CH": 7,
+  "D": 8,
+  "DH": 9,
+  "EH": 10,
+  "ER": 11,
+  "EY": 12,
+  "F": 13,
+  "G": 14,
+  "HH": 15,
+  "IH": 16,
+  "IY": 17,
+  "JH": 18,
+  "K": 19,
+  "L": 20,
+  "M": 21,
+  "N": 22,
+  "NG": 23,
+  "OW": 24,
+  "OY": 25,
+  "P": 26,
+  "R": 27,
+  "S": 28,
+  "SH": 29,
+  "T": 30,
+  "TH": 31,
+  "UH": 32,
+  "UW": 33,
+  "V": 34,
+  "W": 35,
+  "Y": 36,
+  "Z": 37,
+  "ZH": 38,
+  ".": 39
+};
 
 this.onmessage = function(e){
   switch(e.data.command){
@@ -89,6 +91,9 @@ this.onmessage = function(e){
       break;
     case 'savePhones':
       savePhones();
+      break;
+    case 'concatPhones':
+      concatPhones(e.data.type, e.data.series);
       break;
     case 'clear':
       clear();
@@ -122,6 +127,32 @@ function exportWAV(type){
   var voicePart = getVoicePart(interleaved);
 
   var dataview = encodeWAV(voicePart);
+  var audioBlob = new Blob([dataview], { type: type });
+  
+  this.postMessage(audioBlob);
+}
+
+function concatPhones(type, array) {
+  console.log(array);
+  var output = [];
+  for (var i = 0; i < array.length; i++) {
+    console.log(i);
+    
+    console.log(array[i]);
+    if (! array[i] in PHONE_DICT) continue;
+    var index = PHONE_DICT[array[i]];
+    console.log(index);
+    if (index == 40) {
+      for (var j = 0; j < BLANK.length; j++) {
+        output.push(BLANK[j]);
+      }
+    } else {
+      for (var j = 0; j < phones[index].length; j++) {
+        output.push(phones[index][j]);
+      }
+    }
+  }
+  var dataview = encodeWAV(output);
   var audioBlob = new Blob([dataview], { type: type });
   
   this.postMessage(audioBlob);
@@ -181,7 +212,7 @@ function savePhones() {
 
 function playPhone(type, index) {
   console.log("worker playphone");
-  if (index < 0 || index > 40 || index > phones.length) return;
+  if (index < 0 || index > 39 || index > phones.length) return;
   console.log(type);
   console.log(index);
   var dataview = encodeWAV(phones[index]);
