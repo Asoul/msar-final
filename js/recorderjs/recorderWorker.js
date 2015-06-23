@@ -155,6 +155,17 @@ function getVoicePart( input ) {
     }
   }
   console.log(input.length ," to ", output.length);
+  return hammingWindow(output);
+}
+
+function hammingWindow(input) {
+  var output = [];
+  var alpha = 0.46;
+  var len = input.length;
+  for (var i = 0; i < len; i++) {
+    var tmp = ((1-alpha) - alpha*Math.cos(2*Math.PI*i/len)) * input[i];
+    output.push(tmp);
+  }
   return output;
 }
 
