@@ -24,6 +24,8 @@ var rafID = null;
 var analyserContext = null;
 var canvasWidth, canvasHeight;
 var recIndex = 0;
+var merger = audioContext.createChannelMerger(2);
+var osc = audioContext.createOscillator();
 var qq = null; // asoul add
 
 function drawBuffer( width, height, context, data ) {
@@ -109,6 +111,21 @@ function toggleSaying( e ) {
     // audioRecorder.array2WAV( gotBuffers );
 }
 
+function toggleTimbre( e ) {
+    console.log("toggle timbre");
+
+    if (e.classList.contains("playing")) {
+        // stop playing
+        e.classList.remove("playing");
+        osc.disconnect();
+    } else {
+        // start playing
+        e.classList.add("playing");
+        
+        osc.connect(merger, 0, 1);
+    }
+}
+
 function cancelAnalyserUpdates() {
     window.cancelAnimationFrame( rafID );
     rafID = null;
@@ -169,7 +186,17 @@ function gotStream(stream) {
     zeroGain = audioContext.createGain();
     zeroGain.gain.value = 0.0;
     inputPoint.connect( zeroGain );
-    zeroGain.connect( audioContext.destination );
+
+    zeroGain.connect(merger, 0, 0);
+    var real = new Float32Array([0,0.4,0.4,1,1,1,0.3,0.7,0.6,0.5,0.9,0.8]);
+    var imag = new Float32Array(real.length);
+    var hornTable = audioContext.createPeriodicWave(real, imag);
+
+    osc.setPeriodicWave(hornTable);
+    osc.frequency.value = 160;
+    osc.start();
+    
+    merger.connect( audioContext.destination );
     updateAnalysers();
 }
 

@@ -39,7 +39,10 @@
 		background: -moz-radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
 		background: radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
 	}
-	#play, #say { height: 10vh; }
+	#play, #say, #timbre { height: 10vh; }
+	#timbre.playing {
+		box-shadow: 0px 0px 10px red;
+	}
 	#save, #save img { height: 10vh; }
 	#save { opacity: 0.25;}
 	#save[download] { opacity: 1;}
@@ -68,6 +71,7 @@
 		<img id="record" src="img/mic128.png" onclick="toggleRecording(this);" class="">
 		<img id="play" src="img/play.svg" onclick="togglePlaying(this);" class="">
 		<img id="say" src="img/say.jpg" onclick="toggleSaying(this);" class="">
+		<img id="timbre" src="img/timbre.gif" onclick="toggleTimbre(this);" class="">
 		<a id="save" href="" download=""><img src="img/save.svg"></a>
 	</div>
 	<audio id="audio" src=""></audio>
