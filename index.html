@@ -1,80 +1,140 @@
 <!DOCTYPE html>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=Big5">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>YoYoMan</title>
+	<title>Say it!</title>
 	
-	<script src="js/fft.js"></script>
+	<!--<script src="js/fft.js"></script>
 	<script src="js/recorderjs/recorder.js"></script>
-	<script src="js/main.js"></script>
+	<script src="js/main.js"></script>-->
 	
 	<style>
-	html { overflow: hidden; }
 	body { 
-		font: 14pt Arial, sans-serif; 
+		font: 25pt Arial, sans-serif; 
 		background: lightgrey;
 		display: flex;
-		flex-direction: column;
 		height: 100vh;
 		width: 100%;
 		margin: 0 0;
 	}
-	canvas { 
-		display: inline-block; 
-		background: #202020; 
-		width: 95%;
-		height: 45%;
-		box-shadow: 0px 0px 10px blue;
+	#left {
+		width: 45%;
+		text-align: center;
+	}
+	#source {
+		margin: 25% 10%;
+		width: 80%;
+		resize: none;
+		height: 50%;
+		font-size: 20pt;
+	}
+	#center {
+		width: 10%;
+		height: 100%;
+		vertical-align: middle;
+		text-align: center;
+		position: relative;
 	}
 	#controls {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: space-around;
-		height: 20%;
-		width: 100%;
+		position: relative;
+		top: 25%;
+		height: 50%;
+		width: 60%;
+		display: inline-block;
 	}
-	#record { height: 14vh; }
+	#record, #play, #say {
+		width: 80%;
+		padding: 10%;
+	}
+	#right {
+		width: 45%;
+	}
+	#alphabets {
+		width: 80%;
+		height: 60%;
+		margin: auto;
+		margin-top: 15%;
+		position: relative;
+		text-align: center;
+		line-height: 150%;
+	}
 	#record.recording { 
 		background: red;
 		background: -webkit-radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
 		background: -moz-radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
 		background: radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
 	}
-	#play, #say, #timbre { height: 10vh; }
-	#timbre.playing {
-		box-shadow: 0px 0px 10px red;
-	}
-	#save, #save img { height: 10vh; }
-	#save { opacity: 0.25;}
-	#save[download] { opacity: 1;}
-	#viz {
-		height: 80%;
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-around;
-		align-items: center;
-	}
-	@media (orientation: landscape) {
-		body { flex-direction: row;}
-		#controls { flex-direction: column; height: 100%; width: 10%;}
-		#viz { height: 100%; width: 90%;}
-	}
-
+	
 	</style>
 </head>
 <body>
-	<div id="viz">
-		<canvas id="analyser" width="1024" height="500"></canvas>
-		<canvas id="wavedisplay" width="1024" height="500"></canvas>
+	<div id="left">
+		<textarea id="source" name="text" wrap="SOFT" tabindex="0" dir="ltr" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" rows="10"></textarea>
 	</div>
-	<div id="controls">
-		<img id="record" src="img/mic128.png" onclick="toggleRecording(this);" class="">
-		<img id="play" src="img/play.svg" onclick="togglePlaying(this);" class="">
-		<img id="say" src="img/say.jpg" onclick="toggleSaying(this);" class="">
-		<img id="timbre" src="img/timbre.gif" onclick="toggleTimbre(this);" class="">
-		<a id="save" href="" download=""><img src="img/save.svg"></a>
+	<div id="center">
+		<div id="controls">
+			<img id="record" src="img/mic128.png" onclick="toggleRecording(this);" class="" alt="全部錄音">
+			<img id="play" src="img/play.svg" onclick="togglePlaying(this);" class="" alt="播放">
+			<img id="say" src="img/say.jpg" onclick="" class="" alt="更改單音">
+			<audio id="audio" src=""></audio>	
+		</div>
 	</div>
-	<audio id="audio" src=""></audio>
-
+	<div id="right">
+		<table id="alphabets">
+			<tr>
+				<td>AA</td>
+				<td>AE</td>
+				<td>AH</td>
+				<td>AO</td>
+				<td>AW</td>
+			</tr>
+			<tr>
+				<td>AY</td>
+				<td>B</td>
+				<td>CH</td>
+				<td>D</td>
+				<td>DH</td>
+			</tr>
+			<tr>
+				<td>EH</td>
+				<td>ER</td>
+				<td>EY</td>
+				<td>F</td>
+				<td>G</td>
+			</tr>
+			<tr>
+				<td>HH</td>
+				<td>IH</td>
+				<td>IY</td>
+				<td>JH</td>
+				<td>K</td>
+			</tr>
+			<tr>
+				<td>L</td>
+				<td>M</td>
+				<td>N</td>
+				<td>NG</td>
+				<td>OW</td>
+			</tr>
+			<tr>
+				<td>OY</td>
+				<td>P</td>
+				<td>R</td>
+				<td>S</td>
+				<td>SH</td>
+			</tr>
+			<tr>
+				<td>T</td>
+				<td>TH</td>
+				<td>UH</td>
+				<td>UW</td>
+				<td>V</td>
+			</tr>
+			<tr>
+				<td>W</td>
+				<td>Y</td>
+				<td>Z</td>
+				<td>ZH</td>
+			</tr>
+		</table>
+	</div>
 </body></html>
